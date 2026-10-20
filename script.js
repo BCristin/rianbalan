@@ -15,7 +15,7 @@ function initLightbox() {
     const thumb = frame.querySelector("img");
     img.src = frame.dataset.full;
     img.alt = thumb.alt;
-    caption.textContent = `${frame.nextElementSibling.textContent} · ${current + 1} / ${frames.length}`;
+    caption.textContent = `${current + 1} / ${frames.length}`;
   };
 
   frames.forEach((frame, index) => {

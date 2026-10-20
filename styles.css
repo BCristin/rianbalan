@@ -129,16 +129,6 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   border: 6px solid var(--paper);
 }
 
-.frame-no,
-.contact-sheet figcaption {
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  color: var(--smoke);
-  font-variant-numeric: tabular-nums;
-}
-
-.frame-no { position: absolute; right: 0; bottom: 0; }
-
 .section-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -154,8 +144,7 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   color: var(--paper);
 }
 .portfolio > * { max-width: var(--max); margin-left: auto; margin-right: auto; }
-.portfolio .section-head p,
-.portfolio figcaption { color: #a8a49c; }
+.portfolio .section-head p { color: #a8a49c; }
 
 .contact-sheet {
   columns: 4 220px;
@@ -170,7 +159,6 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   margin: 0 0 clamp(14px, 2vw, 24px);
   break-inside: avoid;
 }
-.contact-sheet figcaption { margin-top: 6px; }
 
 .frame {
   display: block;
