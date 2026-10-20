@@ -375,6 +375,8 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
 .flatpickr-day.today { border-color: var(--honey); }
 .flatpickr-day.today:hover { background: var(--honey); border-color: var(--honey); color: var(--paper); }
 
+.form-hint { margin: -8px 0 0; font-size: 0.8125rem; color: var(--smoke); }
+
 .form-status { margin: 0; min-height: 1.6em; font-size: 0.9375rem; }
 .form-status.is-error { color: #b3261e; }
 

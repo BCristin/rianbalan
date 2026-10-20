@@ -65,9 +65,10 @@ function buildPayload(data) {
     _subject: `New photo session request: ${data.get("package")}`,
     _template: "table",
     _captcha: "false",
-    _replyto: data.get("email"),
+    ...(data.get("email") ? { _replyto: data.get("email") } : {}),
     Name: data.get("name"),
-    Email: data.get("email"),
+    Email: data.get("email") || "Not given",
+    Phone: data.get("phone") || "Not given",
     Package: data.get("package"),
     "Preferred date": data.get("date") || "Not set",
     Message: data.get("message") || "",
@@ -86,6 +87,25 @@ async function sendBooking(payload) {
   }
 }
 
+function isValidPhone(value) {
+  const digits = value.replace(/\D/g, "");
+  return /^[+\d\s().-]+$/.test(value) && digits.length >= 7 && digits.length <= 15;
+}
+
+function findInvalidField(form) {
+  const name = form.elements.name;
+  const email = form.elements.email;
+  const phone = form.elements.phone;
+  const emailValue = email.value.trim();
+  const phoneValue = phone.value.trim();
+
+  if (!name.value.trim()) return { field: name, message: "Please enter your name." };
+  if (!emailValue && !phoneValue) return { field: email, message: "Please add your email or phone number.", also: phone };
+  if (emailValue && !email.checkValidity()) return { field: email, message: "Please check your email address." };
+  if (phoneValue && !isValidPhone(phoneValue)) return { field: phone, message: "Please check your phone number." };
+  return null;
+}
+
 function setStatus(status, text, isError) {
   status.classList.toggle("is-error", isError);
   status.textContent = text;
@@ -99,13 +119,16 @@ function initBookingForm() {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const required = [...form.querySelectorAll("[required]")];
-    const invalid = required.filter((field) => !field.checkValidity());
-    required.forEach((field) => field.setAttribute("aria-invalid", String(invalid.includes(field))));
+    const checked = [form.elements.name, form.elements.email, form.elements.phone];
+    const problem = findInvalidField(form);
+    checked.forEach((field) => {
+      const isInvalid = problem !== null && (field === problem.field || field === problem.also);
+      field.setAttribute("aria-invalid", String(isInvalid));
+    });
 
-    if (invalid.length > 0) {
-      setStatus(status, "Please enter your name and a valid email.", true);
-      invalid[0].focus();
+    if (problem) {
+      setStatus(status, problem.message, true);
+      problem.field.focus();
       return;
     }
 
@@ -118,7 +141,7 @@ function initBookingForm() {
       await sendBooking(buildPayload(data));
       form.reset();
       form.querySelector(".js-date")?._flatpickr?.clear();
-      setStatus(status, "Thank you. Your request was sent and I will reply by email soon.", false);
+      setStatus(status, "Thank you. Your request was sent and I will get back to you soon.", false);
     } catch (error) {
       console.error(error);
       setStatus(status, `Your request could not be sent. Please email me at ${BOOKING_EMAIL}.`, true);
