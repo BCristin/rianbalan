@@ -102,6 +102,19 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   margin-left: -0.04em;
 }
 
+.hero-tagline {
+  display: block;
+  margin-top: clamp(16px, 2.5vw, 28px);
+  padding-left: clamp(2.56px, 0.44vw, 6.08px);
+  font-family: var(--sans);
+  font-size: clamp(0.9375rem, 1.3vw, 1.125rem);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
 .hero-lead {
   max-width: 34ch;
   margin: clamp(24px, 4vw, 40px) 0 32px;
@@ -310,6 +323,40 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   font-size: 0.75rem;
 }
 
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(24px, 6vw, 96px);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(56px, 8vw, 104px) var(--gutter);
+  border-top: 1px solid var(--line);
+}
+.faq-list details { border-bottom: 1px solid var(--line); }
+.faq-list details:first-child { border-top: 1px solid var(--line); }
+.faq-list summary {
+  position: relative;
+  padding: 18px 40px 18px 0;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  list-style: none;
+  cursor: pointer;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after {
+  content: "+";
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--honey);
+}
+.faq-list details[open] summary::after { content: "−"; }
+.faq-list p { max-width: 60ch; margin: 0 0 20px; color: var(--smoke); }
+
 .collab {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
@@ -501,7 +548,8 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   .package-list { grid-template-columns: minmax(0, 1fr); }
   .package + .package { border-left: 0; border-top: 1px solid var(--ink); }
   .contact,
-  .collab { grid-template-columns: minmax(0, 1fr); }
+  .collab,
+  .faq { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 760px) {
