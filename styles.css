@@ -161,6 +161,11 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   columns: 4 220px;
   column-gap: clamp(10px, 1.5vw, 20px);
 }
+.contact-sheet-short { columns: 3 240px; }
+
+.series-head { margin-top: clamp(48px, 7vw, 96px); }
+.series-head h3 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
+
 .contact-sheet figure {
   margin: 0 0 clamp(14px, 2vw, 24px);
   break-inside: avoid;
@@ -221,8 +226,11 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
 }
 
 .package {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  display: grid;
+  grid-row: span 6;
+  grid-template-rows: subgrid;
+  align-content: start;
   padding: clamp(24px, 3vw, 40px);
 }
 .package + .package { border-left: 1px solid var(--ink); }
@@ -234,9 +242,17 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
 .package-featured .btn-solid:hover { background: var(--honey); border-color: var(--honey); color: var(--paper); }
 
 .badge {
-  margin: 0 0 8px;
+  position: absolute;
+  top: 0;
+  left: clamp(24px, 3vw, 40px);
+  transform: translateY(-50%);
+  margin: 0;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--honey);
+  color: var(--paper);
   font-size: 0.8125rem;
-  color: var(--honey);
+  font-weight: 500;
 }
 
 .package h3 { font-size: clamp(1.75rem, 2.6vw, 2rem); font-style: italic; }
@@ -258,7 +274,6 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   list-style: none;
   margin: 0 0 32px;
   padding: 0;
-  flex: 1;
 }
 .package li {
   padding: 10px 0;
