@@ -12,6 +12,7 @@
 		<link
 			href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Manrope:wght@400;500;600&display=swap"
 			rel="stylesheet" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" />
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body>
@@ -245,7 +246,7 @@
 			<section class="packages" id="packages" aria-labelledby="packages-title">
 				<div class="section-head">
 					<h2 id="packages-title">Packages</h2>
-					<p>Founding prices are for the first 10 bookings. After that, the standard price applies.</p>
+					<p>The founding price applies to your first booking. Standard prices apply to any future bookings.</p>
 				</div>
 				<div class="package-list">
 					<article class="package">
@@ -324,13 +325,14 @@
 						</label>
 						<label
 							>Preferred date
-							<input type="date" name="date" />
+							<input type="text" name="date" class="js-date" placeholder="Choose a date" />
 						</label>
 					</div>
 					<label
 						>Message
 						<textarea name="message" rows="4" placeholder="Location, occasion, any ideas you have"></textarea>
 					</label>
+					<input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
 					<button type="submit" class="btn btn-solid">Send request</button>
 					<p class="form-status" role="status" aria-live="polite"></p>
 				</form>
@@ -350,6 +352,7 @@
 			<button type="button" class="lightbox-nav next" aria-label="Next photo">›</button>
 		</dialog>
 
+		<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
 		<script src="script.js"></script>
 	</body>
 </html>

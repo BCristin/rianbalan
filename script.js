@@ -48,44 +48,87 @@ function initPackageLinks() {
   });
 }
 
-function buildMailto(data) {
-  const subject = `Session request: ${data.get("package")}`;
-  const body = [
-    `Name: ${data.get("name")}`,
-    `Email: ${data.get("email")}`,
-    `Package: ${data.get("package")}`,
-    `Preferred date: ${data.get("date") || "not set"}`,
-    "",
-    data.get("message") || "",
-  ].join("\n");
-  return `mailto:${BOOKING_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+function initDatePicker() {
+  const input = document.querySelector(".js-date");
+  if (!input || typeof flatpickr !== "function") return;
+  flatpickr(input, {
+    altInput: true,
+    altFormat: "j F Y",
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    disableMobile: false,
+  });
+}
+
+function buildPayload(data) {
+  return {
+    _subject: `New photo session request: ${data.get("package")}`,
+    _template: "table",
+    _captcha: "false",
+    _replyto: data.get("email"),
+    Name: data.get("name"),
+    Email: data.get("email"),
+    Package: data.get("package"),
+    "Preferred date": data.get("date") || "Not set",
+    Message: data.get("message") || "",
+  };
+}
+
+async function sendBooking(payload) {
+  const response = await fetch(`https://formsubmit.co/ajax/${BOOKING_EMAIL}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || String(result.success) !== "true") {
+    throw new Error(result.message || `Request failed with status ${response.status}`);
+  }
+}
+
+function setStatus(status, text, isError) {
+  status.classList.toggle("is-error", isError);
+  status.textContent = text;
 }
 
 function initBookingForm() {
   const form = document.getElementById("booking-form");
   if (!form) return;
   const status = form.querySelector(".form-status");
+  const submit = form.querySelector('button[type="submit"]');
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const invalid = [...form.querySelectorAll("[required]")].filter((field) => !field.checkValidity());
-    form.querySelectorAll("[required]").forEach((field) => {
-      field.setAttribute("aria-invalid", String(invalid.includes(field)));
-    });
+    const required = [...form.querySelectorAll("[required]")];
+    const invalid = required.filter((field) => !field.checkValidity());
+    required.forEach((field) => field.setAttribute("aria-invalid", String(invalid.includes(field))));
 
     if (invalid.length > 0) {
-      status.classList.add("is-error");
-      status.textContent = "Please enter your name and a valid email.";
+      setStatus(status, "Please enter your name and a valid email.", true);
       invalid[0].focus();
       return;
     }
 
-    status.classList.remove("is-error");
-    status.textContent = "Opening your email app with the request filled in.";
-    window.location.href = buildMailto(new FormData(form));
+    const data = new FormData(form);
+    if (data.get("_honey")) return;
+
+    submit.disabled = true;
+    setStatus(status, "Sending your request…", false);
+    try {
+      await sendBooking(buildPayload(data));
+      form.reset();
+      form.querySelector(".js-date")?._flatpickr?.clear();
+      setStatus(status, "Thank you. Your request was sent and I will reply by email soon.", false);
+    } catch (error) {
+      console.error(error);
+      setStatus(status, `Your request could not be sent. Please email me at ${BOOKING_EMAIL}.`, true);
+    } finally {
+      submit.disabled = false;
+    }
   });
 }
 
 initLightbox();
 initPackageLinks();
+initDatePicker();
 initBookingForm();
