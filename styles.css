@@ -286,6 +286,23 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
 
 .packages-note { margin: 20px 0 0; font-size: 0.875rem; color: var(--smoke); }
 
+.collab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(24px, 6vw, 96px);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(56px, 8vw, 104px) var(--gutter);
+  border-top: 1px solid var(--line);
+}
+.collab-body p {
+  max-width: 52ch;
+  margin: 0 0 28px;
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  color: var(--smoke);
+}
+
 .contact {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
@@ -410,7 +427,8 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .package-list { grid-template-columns: minmax(0, 1fr); }
   .package + .package { border-left: 0; border-top: 1px solid var(--ink); }
-  .contact { grid-template-columns: minmax(0, 1fr); }
+  .contact,
+  .collab { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 760px) {
