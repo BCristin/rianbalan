@@ -38,6 +38,16 @@ function initLightbox() {
   dialog.addEventListener("close", () => frames[current].focus());
 }
 
+function initImageFadeIn() {
+  document.querySelectorAll(".frame img").forEach((img) => {
+    if (img.complete) return;
+    img.classList.add("is-loading");
+    const reveal = () => img.classList.remove("is-loading");
+    img.addEventListener("load", reveal, { once: true });
+    img.addEventListener("error", reveal, { once: true });
+  });
+}
+
 function initPackageLinks() {
   const select = document.querySelector('#booking-form select[name="package"]');
   if (!select) return;
@@ -152,6 +162,7 @@ function initBookingForm() {
 }
 
 initLightbox();
+initImageFadeIn();
 initPackageLinks();
 initDatePicker();
 initBookingForm();

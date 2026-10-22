@@ -9,6 +9,7 @@
   --sans: "Manrope", system-ui, sans-serif;
   --gutter: clamp(16px, 4vw, 56px);
   --max: 1320px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -77,8 +78,9 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   font: 500 0.9375rem var(--sans);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s, transform 160ms var(--ease-out);
 }
+.btn:active:not(:disabled) { transform: scale(0.97); }
 .btn-solid { background: var(--ink); color: var(--paper); border: 1px solid var(--ink); }
 .btn-solid:hover { background: var(--honey); border-color: var(--honey); }
 .btn-line { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
@@ -180,9 +182,14 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   border: 0;
   background: none;
   cursor: zoom-in;
+  transition: transform 160ms var(--ease-out);
 }
-.frame img { width: 100%; transition: opacity 0.25s; }
-.frame:hover img { opacity: 0.85; }
+.frame:active { transform: scale(0.985); }
+.frame img { width: 100%; transition: opacity 300ms var(--ease-out); }
+.frame img.is-loading { opacity: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .frame:hover img { opacity: 0.85; }
+}
 
 .process {
   max-width: var(--max);
@@ -355,6 +362,19 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   color: var(--honey);
 }
 .faq-list details[open] summary::after { content: "−"; }
+@supports (interpolate-size: allow-keywords) {
+  .faq-list details { interpolate-size: allow-keywords; }
+  .faq-list details::details-content {
+    height: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      height 200ms var(--ease-out),
+      opacity 200ms var(--ease-out),
+      content-visibility 200ms allow-discrete;
+  }
+  .faq-list details[open]::details-content { height: auto; opacity: 1; }
+}
 .faq-list p { max-width: 60ch; margin: 0 0 20px; color: var(--smoke); }
 
 .collab {
@@ -504,7 +524,12 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   border-radius: 4px;
   background: var(--paper-raised);
   box-shadow: 0 8px 24px rgba(29, 28, 26, 0.12);
+  transition: opacity 400ms ease, transform 400ms ease;
 }
+@starting-style {
+  .cookie-notice { opacity: 0; transform: translateY(100%); }
+}
+.cookie-notice.is-leaving { opacity: 0; transform: translateY(100%); transition-duration: 200ms; }
 .cookie-notice p { margin: 0; font-size: 0.875rem; line-height: 1.5; color: var(--ink); }
 .cookie-notice a { text-underline-offset: 3px; white-space: nowrap; }
 .cookie-notice .btn { flex-shrink: 0; min-width: 88px; }
@@ -519,10 +544,25 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
   border: 0;
   background: rgba(20, 19, 18, 0.96);
   color: var(--paper);
+  opacity: 0;
+  transition:
+    opacity 180ms var(--ease-out),
+    overlay 180ms allow-discrete,
+    display 180ms allow-discrete;
 }
-.lightbox[open] { display: grid; place-items: center; }
+.lightbox[open] { display: grid; place-items: center; opacity: 1; transition-duration: 250ms; }
 .lightbox::backdrop { background: transparent; }
-.lightbox img { max-width: calc(100vw - 32px); max-height: calc(100vh - 96px); object-fit: contain; }
+.lightbox img {
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 96px);
+  object-fit: contain;
+  transition: transform 250ms var(--ease-out);
+}
+.lightbox:not([open]) img { transform: scale(0.96); transition-duration: 180ms; }
+@starting-style {
+  .lightbox[open] { opacity: 0; }
+  .lightbox[open] img { transform: scale(0.96); }
+}
 .lightbox-caption { position: absolute; bottom: 16px; left: 0; right: 0; margin: 0; text-align: center; font-size: 0.8125rem; color: #a8a49c; }
 
 .lightbox-close,
@@ -574,5 +614,9 @@ h2 { font-size: clamp(2.25rem, 5vw, 3.75rem); letter-spacing: -0.01em; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * { transition: none !important; }
+  .btn:active:not(:disabled),
+  .frame:active { transform: none; }
+  .lightbox img { transition: none; }
+  .cookie-notice { transition-property: opacity; }
+  .faq-list details::details-content { transition-property: opacity, content-visibility; }
 }

@@ -35,7 +35,8 @@ function buildCookieNotice() {
   button.textContent = "OK";
   button.addEventListener("click", () => {
     saveNoticeAccepted();
-    notice.remove();
+    notice.classList.add("is-leaving");
+    Promise.allSettled(notice.getAnimations().map((animation) => animation.finished)).then(() => notice.remove());
   });
 
   notice.append(text, button);
